@@ -22,7 +22,7 @@ namespace TaskManager
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window, INotifyPropertyChanged
+    public partial class MainWindow : Window
     {
         private Process[] processes = Process.GetProcesses();
         private List<Processlist> processlist = new List<Processlist>();
@@ -39,14 +39,11 @@ namespace TaskManager
             ProcessInfo.ItemsSource = processlist;
         }
 
-
         //TODO
         private void LoadProcesses()
         {
            
         }
-
-        
 
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
@@ -65,41 +62,54 @@ namespace TaskManager
             PropertyChanged(this, new PropertyChangedEventArgs(property));
         }
 
-
-        //TODO
-        private void Search_KeyDown(object sender, KeyEventArgs e)
+        private void Search_KeyDown(object sender, TextChangedEventArgs e)
         {
+            foundList.Clear();
             for (int i = 0; i < processlist.Count; i++)
-            {
-                if (e.Key == Key.Enter)
+            {      
+                if(processlist[i].name.Contains(Search.Text) || processlist[i].id.ToString().Contains(Search.Text))
                 {
-                    if (Search.Text.Contains(processlist[i].name))
-                    {
-                        foundList.Add(processlist[i]);
-                    }
-
-                    else if (Search.Text.Contains(processlist[i].id.ToString()))
-                    {
-                        foundList.Add(processlist[i]);
-                    }
-
-                    else
-                    {
-
-                    }
+                    foundList.Add(processlist[i]);
                 }
             }
+
             ProcessInfo.ItemsSource = foundList;
             ICollectionView view = CollectionViewSource.GetDefaultView(ProcessInfo.ItemsSource);
             view.Refresh();
+            
 
-            if(Search.Text == string.Empty)
+            if(Search.Text == "")
             {
-                LoadProcesses();
-                
-                view = CollectionViewSource.GetDefaultView(ProcessInfo.ItemsSource);
+                foundList.Clear();
+                processlist.Clear();
+                processes = Process.GetProcesses();
+                foreach (Process item in processes)
+                {
+                    processlist.Add(new Processlist() { id = item.Id, name = item.ProcessName });
+                }
+                ProcessInfo.ItemsSource = processlist;
                 view.Refresh();
             }
+        }
+
+
+        private bool WhenToClear()
+        {
+            string str1;
+            string str2;
+
+            for(int i = 0; i < Search.Text.Length; i++)
+            {
+                str1 = Search.Text;
+                if(str1.Length < Search.Text.Length)
+                {
+
+                }
+
+            }
+
+
+            return false;
         }
     }
 
