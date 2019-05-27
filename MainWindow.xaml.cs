@@ -85,26 +85,6 @@ namespace TaskManager
                 view.Refresh();
             }
         }
-
-
-        private bool WhenToClear()
-        {
-            string str1;
-            string str2;
-
-            for(int i = 0; i < Search.Text.Length; i++)
-            {
-                str1 = Search.Text;
-                if(str1.Length < Search.Text.Length)
-                {
-
-                }
-
-            }
-
-
-            return false;
-        }
     }
 
     public class Processlist
