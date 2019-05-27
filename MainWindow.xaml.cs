@@ -39,12 +39,6 @@ namespace TaskManager
             ProcessInfo.ItemsSource = processlist;
         }
 
-        //TODO
-        private void LoadProcesses()
-        {
-           
-        }
-
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
             var pid = (ProcessInfo.SelectedItem as Processlist).id;
