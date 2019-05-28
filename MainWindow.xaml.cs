@@ -27,6 +27,7 @@ namespace TaskManager
         private Process[] processes = Process.GetProcesses();
         private List<Processlist> processlist = new List<Processlist>();
         private List<Processlist> foundList = new List<Processlist>();
+        private ICollectionView view;
         public MainWindow()
         {
             InitializeComponent();
@@ -41,23 +42,31 @@ namespace TaskManager
 
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
-            var pid = (ProcessInfo.SelectedItem as Processlist).id;
-            var process = Process.GetProcessById(pid);
-            processlist.RemoveAt(ProcessInfo.SelectedIndex);
-            ICollectionView view = CollectionViewSource.GetDefaultView(ProcessInfo.ItemsSource);
-            view.Refresh();
-            process.Kill();
-        }
+            try
+            {
+                view = CollectionViewSource.GetDefaultView(ProcessInfo.ItemsSource);
+                view.Refresh();
+                var pid = (ProcessInfo.SelectedItem as Processlist).id;
+                var process = Process.GetProcessById(pid);
 
-        public event PropertyChangedEventHandler PropertyChanged;
+                processlist.RemoveAt(ProcessInfo.SelectedIndex);
+                foundList.RemoveAt(ProcessInfo.SelectedIndex);
 
-        public void OnPropertyChanged([CallerMemberName] string property = "")
-        {
-            PropertyChanged(this, new PropertyChangedEventArgs(property));
+                view = CollectionViewSource.GetDefaultView(ProcessInfo.ItemsSource);
+                view.Refresh();
+                process.Kill();
+            }
+
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void Search_KeyDown(object sender, TextChangedEventArgs e)
         {
+            view = CollectionViewSource.GetDefaultView(ProcessInfo.ItemsSource);
+            view.Refresh();
             foundList.Clear();
             for (int i = 0; i < processlist.Count; i++)
             {      
@@ -66,9 +75,9 @@ namespace TaskManager
                     foundList.Add(processlist[i]);
                 }
             }
-
+            view.Refresh();
             ProcessInfo.ItemsSource = foundList;
-            ICollectionView view = CollectionViewSource.GetDefaultView(ProcessInfo.ItemsSource);
+            view = CollectionViewSource.GetDefaultView(ProcessInfo.ItemsSource);
             view.Refresh();
             
 
