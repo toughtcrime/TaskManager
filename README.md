@@ -1,5 +1,5 @@
 # TaskManager
-Simple Task Manager created on WPF technology.
+Simple Task Manager created on WPF.
 
 Task Manager currently has the next functions:
 - Searching a process by name and by PID
